@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ziya Shalbuzov - Digital Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #00d4ff;
+            --secondary-color: #64ffda;
+            --accent-color: #ff6b9d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0bec5;
+            --bg-primary: #090a0f;
+            --bg-secondary: #1b2735;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: radial-gradient(ellipse at top, var(--bg-secondary) 0%, var(--bg-primary) 70%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+        
+        /* Advanced starfield with multiple layers */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .star {
+            position: absolute;
+            background: var(--text-primary);
+            border-radius: 50%;
+            animation: twinkle 4s infinite ease-in-out;
+        }
+        
+        .star.small { width: 1px; height: 1px; }
+        .star.medium { width: 2px; height: 2px; }
+        .star.large { width: 3px; height: 3px; }
+        
+        .star.blue { background: var(--primary-color); }
+        .star.cyan { background: var(--secondary-color); }
+        .star.pink { background: var(--accent-color); }
+        
+        .star:nth-child(2n) { animation-delay: 1s; }
+        .star:nth-child(3n) { animation-delay: 2s; }
+        .star:nth-child(4n) { animation-delay: 3s; }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            25% { opacity: 0.8; transform: scale(1.1); }
+            50% { opacity: 1; transform: scale(1.3); }
+            75% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        /* Enhanced floating moon with crater details */
+        .moon {
+            position: fixed;
+            top: 8%;
+            right: 8%;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle at 35% 25%, #fff4a3, #ffe082, #ffcc02);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 80px rgba(255, 196, 2, 0.4),
+                inset -10px -10px 40px rgba(0, 0, 0, 0.1);
+            animation: moonFloat 8s ease-in-out infinite;
+            z-index: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 30%;
+            width: 18px;
+            height: 18px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            box-shadow: 
+                20px 10px 0 -5px rgba(0, 0, 0, 0.1),
+                -5px 25px 0 -8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .moon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 120px rgba(255, 196, 2, 0.6);
+        }
+        
+        @keyframes moonFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(2deg); }
+            50% { transform: translateY(-25px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(-2deg); }
+        }
+        
+        /* Nebula effect */
+        .nebula {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(100, 255, 218, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(0, 212, 255, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: nebulaShift 20s ease-in-out infinite;
+        }
+        
+        @keyframes nebulaShift {
+            0%, 100% { opacity: 0.3; transform: rotate(0deg) scale(1); }
+            50% { opacity: 0.6; transform: rotate(2deg) scale(1.05); }
+        }
+        
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Hero section with enhanced animations */
+        .hero {
+            text-align: center;
+            padding: 6rem 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.1; }
+        }
+        
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--secondary-color), var(--primary-color));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 4s ease-in-out infinite;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .hero-subtitle {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideInUp 1.2s ease-out 0.5s forwards;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-description {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            max-width: 700px;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: slideInUp 1.2s ease-out 1s forwards;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Enhanced skills section */
+        .skills {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 5rem 0;
+            opacity: 0;
+            animation: slideInUp 1.2s ease-out 1.5s forwards;
+        }
+        
+        .skill-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+        
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .skill-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 25px;
+        }
+        
+        .skill-card:hover::before {
+            left: 100%;
+        }
+        
+        .skill-card:hover::after {
+            opacity: 0.1;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-15px) rotateY(10deg) rotateX(5deg);
+            box-shadow: 
+                0 30px 60px rgba(0, 212, 255, 0.3),
+                0 0 50px rgba(100, 255, 218, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .skill-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-card:hover .skill-icon {
+            transform: scale(1.2) rotateY(-10deg);
+        }
+        
+        .skill-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .skill-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Enhanced links section */
+        .links-section {
+            margin: 8rem 0;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 6vw, 3rem);
+            margin-bottom: 4rem;
+            color: var(--secondary-color);
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin: 4rem 0;
+        }
+        
+        .link-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+        
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), rgba(0, 212, 255, 0.1));
+            opacity: 0;
+            transition: all 0.4s ease;
+            border-radius: 20px;
+        }
+        
+        .link-card:hover::before {
+            opacity: 1;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(100, 255, 218, 0.25),
+                0 0 80px rgba(0, 212, 255, 0.15);
+            border-color: var(--secondary-color);
+        }
+        
+        .link-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .link-card:hover .link-icon {
+            transform: scale(1.2) rotateZ(5deg);
+        }
+        
+        .link-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .link-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Enhanced contact section */
+        .contact {
+            text-align: center;
+            padding: 5rem 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border-radius: 40px;
+            margin: 6rem 0;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 157, 0.05), rgba(0, 212, 255, 0.05));
+            border-radius: 40px;
+        }
+        
+        .contact-email {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 1.5rem 3rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: inline-block;
+            margin-top: 2rem;
+            background: rgba(255, 107, 157, 0.1);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .contact-email::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-color);
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+        
+        .contact-email:hover::before {
+            left: 0;
+        }
+        
+        .contact-email:hover {
+            color: var(--bg-primary);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.4);
+        }
+        
+        /* Advanced floating particles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleDrift 20s infinite linear;
+        }
+        
+        .particle.small {
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 255, 218, 0.6);
+        }
+        
+        .particle.medium {
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 212, 255, 0.4);
+        }
+        
+        .particle.large {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 107, 157, 0.3);
+        }
+        
+        @keyframes particleDrift {
+            from {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--secondary-color);
+            animation: scrollBounce 2s infinite;
+            z-index: 10;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-indicator:hover {
+            color: var(--primary-color);
+            transform: translateX(-50%) scale(1.2);
+        }
+        
+        @keyframes scrollBounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-8px);
+            }
+        }
+        
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--glass-border);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .skills {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .links-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .moon {
+                width: 100px;
+                height: 100px;
+                top: 5%;
+                right: 5%;
+            }
+            
+            .skill-card, .link-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Nebula background -->
+    <div class="nebula"></div>
+    
+    <!-- Enhanced starfield -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Interactive moon -->
+    <div class="moon" onclick="createMoonParticles()"></div>
+    
+    <!-- Main content -->
+    <div class="container">
+        <section class="hero">
+            <h1 class="hero-title">ZIYA SHALBUZOV</h1>
+            <p class="hero-subtitle">Digital Explorer & Cyber Guardian</p>
+            <p class="hero-description">
+                I'm an 18-year-old Computer Science student with a passion for cybersecurity and strategic thinking through chess. I navigate the digital cosmos, securing systems and solving complex puzzles while exploring the infinite possibilities of technology.
+            </p>
+            
+            <div class="skills">
+                <div class="skill-card" data-tilt>
+                    <span class="skill-icon">🔐</span>
+                    <h3 class="skill-title">Cyber Security</h3>
+                    <p class="skill-desc">Protecting digital realms from sophisticated threats and vulnerabilities</p>
+                </div>
+                <div class="skill-card" data-tilt>
+                    <span class="skill-icon">♛</span>
+                    <h3 class="skill-title">Chess</h3>
+                    <p class="skill-desc">Strategic thinking, pattern recognition, and tactical problem solving</p>
+                </div>
+                <div class="skill-card" data-tilt>
+                    <span class="skill-icon">💻</span>
+                    <h3 class="skill-title">Computer Science</h3>
+                    <p class="skill-desc">Building innovative solutions with cutting-edge technology</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="links-section">
+            <h2 class="section-title">Explore My Universe</h2>
+            <div class="links-grid">
+                <a href="https://codedx.io/z1y4" class="link-card" target="_blank" data-tilt>
+                    <div class="link-icon">🚀</div>
+                    <h3 class="link-title">Codedx</h3>
+                    <p class="link-desc">My coding journey, challenges, and programming achievements</p>
+                </a>
+                
+                <a href="https://tryhackme.com/p/z1y4" class="link-card" target="_blank" data-tilt>
+                    <div class="link-icon">🛡️</div>
+                    <h3 class="link-title">TryHackMe</h3>
+                    <p class="link-desc">Cybersecurity challenges, progress, and skill development</p>
+                </a>
+                
+                <a href="https://github.com/th3z1y4" class="link-card" target="_blank" data-tilt>
+                    <div class="link-icon">⭐</div>
+                    <h3 class="link-title">GitHub</h3>
+                    <p class="link-desc">Open source projects, code repositories, and contributions</p>
+                </a>
+            </div>
+        </section>
+        
+        <section class="contact">
+            <h2 class="section-title">Connect Across the Cosmos</h2>
+            <p class="hero-description">Ready to collaborate on exciting projects, discuss cybersecurity innovations, or explore the fascinating world of technology together?</p>
+            <a href="mailto:theziyashalbuzov@gmail.com" class="contact-email">
+                Launch Communication
+            </a>
+        </section>
+    </div>
+    
+    <div class="scroll-indicator" onclick="scrollToTop()">
+        <span style="font-size: 2.5rem;">↑</span>
+    </div>
+    
+    <script>
+        // Enhanced starfield creation
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 200;
+            const colors = ['', 'blue', 'cyan', 'pink'];
+            const sizes = ['small', 'medium', 'large'];
+            
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = `star ${sizes[Math.floor(Math.random() * sizes.length)]} ${colors[Math.floor(Math.random() * colors.length)]}`;
+                
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                star.style.animationDelay = Math.random() * 4 + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Enhanced particle system
+        function createParticle() {
+            const particle = document.createElement('div');
+            const sizes = ['small', 'medium', 'large'];
+            const size = sizes[Math.floor(Math.random() * sizes.length)];
+            
+            particle.className = `particle ${size}`;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.remove();
+                }
+            }, 20000);
+        }
+        
+        // Moon click interaction
+        function createMoonParticles() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'fixed';
+                    particle.style.top = '15%';
+                    particle.style.right = '15%';
+                    particle.style.width = '4px';
+                    particle.style.height = '4px';
+                    particle.style.background = '#ffd700';
+                    particle.style.borderRadius = '50%';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.zIndex = '100';
+                    
+                    const angle = (Math.PI * 2 * i) / 10;
+                    const velocity = 100;
+                    const vx = Math.cos(angle) * velocity;
+                    const vy = Math.sin(angle) * velocity;
+                    
+                    document.body.appendChild(particle);
+                    
+                    let pos = { x: 0, y: 0 };
+                    const animate = () => {
+                        pos.x += vx * 0.02;
+                        pos.y += vy * 0.02;
+                        particle.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+                        particle.style.opacity = Math.max(0, 1 - Math.sqrt(pos.x * pos.x + pos.y * pos.y) / 200);
+                        
+                        if (particle.style.opacity > 0) {
+                            requestAnimationFrame(animate);
+                        } else {
+                            particle.remove();
+                        }
+                    };
+                    animate();
+                }, i * 50);
+            }
+        }
+        
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Advanced parallax effects
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const moon = document.querySelector('.moon');
+            const nebula = document.querySelector('.nebula');
+            const stars = document.querySelector('.stars');
+            
+            if (moon) moon.style.transform = `translateY(${scrolled * 0.3}px)`;
+            if (nebula) nebula.style.transform = `translateY(${scrolled * 0.1}px)`;
+            if (stars) stars.style.transform = `translateY(${scrolled * 0.05}px)`;
+        }
+        
+        // Intersection Observer for animations
+        function setupIntersectionObserver() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.skill-card, .link-card, .contact').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // Mouse tracking for card tilt effects
+        function setupCardTilt() {
+            document.querySelectorAll('[data-tilt]').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                });
+            });
+        }
+        
+        // Typing effect for hero subtitle
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+        
+        // Initialize everything when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove loading overlay
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => loadingOverlay.remove(), 500);
+                }
+            }, 1500);
+            
+            // Initialize components
+            createStars();
+            setupIntersectionObserver();
+            setupCardTilt();
+            
+            // Start particle system
+            setInterval(createParticle, 2000);
+            
+            // Add scroll event listeners
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateParallax();
+                        
+                        // Hide/show scroll indicator
+                        const scrollIndicator = document.querySelector('.scroll-indicator');
+                        if (window.pageYOffset > 100) {
+                            scrollIndicator.style.opacity = '1';
+                        } else {
+                            scrollIndicator.style.opacity = '0.5';
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp' && e.ctrlKey) {
+                    e.preventDefault();
+                    scrollToTop();
+                }
+            });
+            
+            // Add smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Add click sound effect (optional)
+            document.querySelectorAll('.skill-card, .link-card, .contact-email').forEach(element => {
+                element.addEventListener('click', () => {
+                    // Create a subtle click feedback
+                    element.style.transform += ' scale(0.98)';
+                    setTimeout(() => {
+                        element.style.transform = element.style.transform.replace(' scale(0.98)', '');
+                    }, 150);
+                });
+            });
+            
+            // Performance optimization: Reduce animations on low-end devices
+            if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+                document.documentElement.style.setProperty('--animation-duration', '0.5s');
+            }
+            
+            // Add resize handler for responsive adjustments
+            window.addEventListener('resize', () => {
+                // Adjust particle count based on screen size
+                const particles = document.querySelectorAll('.particle');
+                if (window.innerWidth < 768 && particles.length > 10) {
+                    Array.from(particles).slice(10).forEach(p => p.remove());
+                }
+            });
+        });
+        
+        // Preload critical resources
+        const preloadLinks = [
+            'https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@300;400;600&display=swap'
+        ];
+        
+        preloadLinks.forEach(href => {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'style';
+            link.href = href;
+            document.head.appendChild(link);
+        });
+    </script>
+</body>
+</html>
